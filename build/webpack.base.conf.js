@@ -8,8 +8,8 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-
 module.exports = {
+  target: process.env.NODE_ENV === 'production'?'electron-renderer':'web',
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
@@ -61,7 +61,10 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          //name: '../fonts/[name].[hash:7].[ext]'
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
+          //outputPath:utils.assetsPath('fonts/'),
+          publicPath:'../../'
         }
       }
     ]

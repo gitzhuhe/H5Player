@@ -5,30 +5,53 @@ import App from './App'
 import router from './router'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import './assets/common.css';
 import Vuex from 'vuex'
-
+//const {ipcRenderer} = require('electron');
+//const {ipcRenderer} = require('electron')
+//import {BrowserWindow} from 'electron'
+//const {BrowserWindow} = require('electron').remote
 Vue.use(Vuex)
 Vue.config.productionTip = false
 Vue.use(iView);
 
+console.log(process.env.NODE_ENV)
+if(process.env.NODE_ENV === 'production'){
+  const ipcRenderer = require('electron').ipcRenderer
+  window.appQuite = function(){
+    ipcRenderer.send('quite');
+  }
+  window.appHide = function(){
+    ipcRenderer.send('hide');
+  }
+}else{
+  window.appQuite = function(){
+    console.log('播放器即将关闭')
+    window.close()
+  }
+  window.appHide = function(){
+    console.log('播放器最小化')
+  }
+}
 
 const store = new Vuex.Store({
   state: {
+    playindex:0,
+    playingId:0,
     mp3Url:'',
     count: 0,
     palyList:[
-      {
-        url:'http://m128.xiami.net/111/2110220111/2102879989/1796918788_1508920462434.mp3?auth_key=1515812400-0-0-1c9002ecb038d24c08a9f51dd7839a4a',
-        thumb:''
-      },
-      {
-        url:'http://m128.xiami.net/962/2099983962/2102788656/1796197137_1500003076166.mp3?auth_key=1515812400-0-0-1d54c2368032f0bc0961313a5d7d7b20\n'
-      }
     ]
   },
   mutations: {
     UpdatePlayList (state, playList) {
       state.palyList = playList
+    },
+    playing(state, id){
+      state.playingId = id;
+    },
+    playIndex(state, index){
+      state.playindex = index
     }
   }
 })

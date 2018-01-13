@@ -1,0 +1,144 @@
+::-webkit-scrollbar {
+  width: 15px;
+  height: 14px
+}
+
+::-webkit-scrollbar-thumb,::-webkit-scrollbar-track {
+  border-radius: 999px;
+  border: 5px solid transparent
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 1px 1px 5px rgba(0,0,0,.7)
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: inset 0 0 0 5px rgba(45, 140, 240, 0.6)
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent
+}
+.loader {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  margin: 0 auto;
+}
+.circular {
+   -webkit-animation: rotate 1.5s linear infinite;
+  animation: rotate 1.5s linear infinite;
+   height: 100%;
+   -webkit-transform-origin: center center;
+   transform-origin: center center;
+   width: 100%;
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   margin: auto;
+}
+.path {
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash 2s ease-in-out infinite,color 4s ease-in-out infinite;
+  animation: dash 2s ease-in-out infinite,color 4s ease-in-out infinite;
+  stroke-linecap: round;
+}
+@-webkit-keyframes dash {
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0
+  }
+
+  50% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -35
+  }
+
+  to {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -124
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0
+  }
+
+  50% {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -35
+  }
+
+  to {
+    stroke-dasharray: 89,200;
+    stroke-dashoffset: -124
+  }
+}
+@-webkit-keyframes color {
+  0%,to {
+    stroke: #d62d20
+  }
+
+  40% {
+    stroke: #0057e7
+  }
+
+  66% {
+    stroke: #008744
+  }
+
+  80%,90% {
+    stroke: #ffa700
+  }
+}
+
+@keyframes color {
+  0%,to {
+    stroke: #d62d20
+  }
+
+  40% {
+    stroke: #0057e7
+  }
+
+  66% {
+    stroke: #008744
+  }
+
+  80%,90% {
+    stroke: #ffa700
+  }
+}
+@-webkit-keyframes rotate {
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn)
+  }
+}
+
+@keyframes rotate {
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn)
+  }
+}
+
+.fadeOutLeftDown {
+  animation-name: fadeOutLeftDown;
+}
+
+.animated-enter-active, .animated-leave-active {
+  transform: translateY(0);
+  transition:.4s
+}
+.animated-enter, .animated-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateY(100%);
+  transition:.4s
+}
