@@ -1,4 +1,10 @@
+# 说明
+
+从0开始学习，编写一个播放器练习
+
 # HTML5 播放器
+
+[Window64位程序下载](master/outApp/shiwu-win32-x64.zip)
 
 界面模仿了网易云音乐，QQ音乐。
 
