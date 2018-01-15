@@ -151,6 +151,7 @@
     color: #1c2438;
     font-size: 18px;
     padding-right: 16px;
+    text-shadow: 1px 1px 0px #666;
   }
   .info span em{
     color: #fff;
@@ -178,6 +179,7 @@
     right: 0px;
     height: 64px;
     z-index: 99;
+    -webkit-app-region: no-drag;
   }
   #menu span{
     line-height: 64px;
@@ -190,6 +192,32 @@
   #menu span:hover{
     color: #ffffff;
     -webkit-user-select: none;
+  }
+  #lrc{
+    height: 200px;
+    overflow: hidden;
+    font-size: 16px;
+    /*box-shadow: inset 0 -15px 30px #fff;*/
+    position: relative;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    width: 500px;
+  }
+  /*#lrc::before{*/
+    /*content: '';*/
+    /*position: absolute;*/
+    /*top:0;*/
+    /*left: 0;*/
+    /*width: 100%;*/
+    /*height: 10px;*/
+    /*!*box-shadow: 0 -15px 30px #fff;*!*/
+  /*}*/
+  #lyricContainer{
+     margin-top: 100px;
+  }
+  #lyricContainer ul li{
+    line-height: 32px;
+    min-height: 32px;
   }
 </style>
 <template>
@@ -252,8 +280,14 @@
               <span>歌手：<em v-for="(item,index ) in MusicDAta.ar" :key="item.id"><template v-if="index"> / </template>{{item.name}}</em></span>
               <span>专辑：<em>{{MusicDAta.al.name}}</em></span>
             </div>
-            <div id="lrc">
-              {{parseLyric}}
+            <div id="lrc" style="height: 200px;overflow: hidden">
+              <div id="lyricContainer">
+                <ul>
+                  <li v-for="(item,index) in parseLyric" :key="index" :id="'line-'+index">
+                    {{item[1]}}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -276,6 +310,8 @@
   import DefaultThumb from '../assets/timg.jpg'
   import '../assets/icon/player/iconfont.css'
   import '../lib/velocity.min'
+  import axios from 'axios';
+
   let StackBlur = require("stackblur-canvas");
   export default {
     name: "player",
@@ -306,7 +342,8 @@
         thumbUrl:DefaultThumb,
         StackBlur:true,
         animated:false,
-        Lyric:''
+        Lyric:'',
+        LyricHeight:0
       }
     },
     mounted(){
@@ -324,10 +361,37 @@
           if(_this.vid.currentTime == _this.vid.duration){
               _this.autoNext();
           }
+          let line = 0;
+          let lrc = document.getElementById('lrc')
+          let lastI = 0;
+          let lyricContainer = document.getElementById('lyricContainer')
+          for (var i = 0, l = _this.parseLyric.length; i < l; i++) {
+            if (_this.vid.currentTime > _this.parseLyric[i][0] - 0.50 /*preload the lyric by 0.50s*/) {
+              if(document.getElementById('line-'+i)) line += document.getElementById('line-'+i).offsetHeight;
+              lastI = i;
+            }
+          }
+          if(85 - line != _this.LyricHeight){
+            if(document.getElementById('line-'+(lastI-1)) ){
+              Velocity(document.getElementById('line-'+(lastI-1)), { fontSize:16,color:'#fff' }, { duration: 0})
+              //Velocity(document.getElementById('line-'+(lastI-1)), { fontSize:16 }, { duration: 0})
+            }
+            let NowLine = document.getElementById('line-'+lastI)
+            //NowLine.style.fontColor = '#57a3f3';
+            if(NowLine) Velocity(NowLine, { fontSize:17, color:'#00da7f' }, { duration: 300})
+            //NowLine.style.c
+            _this.LyricHeight = 95 - line;
+            //lyricContainer.style.marginTop = (85 - line)+'px';
+            Velocity(lyricContainer, { marginTop:_this.LyricHeight }, { duration: 300})
+          }
         };
         // 控制播放按钮
         _this.vid.onplaying = function () {
           console.log('开始播放')
+          for (var i = 0, l = _this.parseLyric.length; i < l; i++) {
+            document.getElementById('line-'+i).style.fontSize = 16+'px';
+            document.getElementById('line-'+i).style.color = '#fff';
+          }
           _this.playing = true
         }
         _this.vid.onpause = function () {
@@ -358,28 +422,21 @@
           return this.$store.state.playindex;
       },
       parseLyric(){
-          const _this = this;
-        if(!_this.Lyric) return '';
+        const _this = this;
+        if(!_this.Lyric) return [[0.0,''],[1.0, '纯音乐，请欣赏']];
+        if(_this.Lyric.length <= 0 ) return [[0.0,''],[1.0, '纯音乐，请欣赏']];
         var lines = _this.Lyric.split('\n'),
           //this regex mathes the time [00.12.78]
           pattern = /\[\d{2}:\d{2}.\d{2,3}\]/g,
           result = [];
 
-
-        while (!pattern.test(lines[0])) {
-          lines = lines.slice(1);
-        }
-        //lines.forEach(function(v, i, a) {
-         for(var i in lines){
-            let v = lines[i];
+        for(var i in lines){
+          let v = lines[i];
           var time = v.match(pattern),
-            value = v.replace(pattern, '');
-
+          value = v.replace(pattern, '');
           if(!time) continue;
           time.forEach(function(v1, i1, a1) {
-//            //convert the [min:sec] to secs format then store into result
             var t = v1.slice(1, -1).split(':');
-            //parseInt(t[0], 10) * 60 + parseFloat(t[1]) + parseInt(0) / 1000,
             result.push([parseInt(t[0], 10) * 60 + parseFloat(t[1]) + parseInt(0) / 1000,  value]);
           });
         };
@@ -387,7 +444,8 @@
         result.sort(function(a, b) {
           return a[0] - b[0];
         });
-        console.log(result)
+        // console.log(result)
+        if(result.length <= 0 ) return [[0.0,''],[1.0, '暂无歌词，请欣赏']];
         return result;
       }
     },
@@ -410,7 +468,7 @@
         this.vid.volume  = value/100;
       },
       thumbUrl(){
-          const _this = this
+        const _this = this
         this.$nextTick(()=>{
             setTimeout(()=>{
               let canvas = document.getElementById('canvas');
@@ -452,7 +510,17 @@
       },
       getDetail(){
         const _this = this;
-        lib.ajax.get('/song/detail?ids='+_this.id).then((res)=>{
+        var CancelToken = axios.CancelToken;
+        try{
+          _this.source.cancel('cancel')
+        }catch (e){
+            console.log(e)
+        }
+        _this.source = CancelToken.source();
+        console.log(_this.source);
+        lib.ajax.get('/song/detail?ids='+_this.id,{
+          cancelToken:_this.source.token
+        }).then((res)=>{
           _this.MusicDAta = res.songs[0];
           _this.loadThumb(_this.MusicDAta.al.picUrl)
           //this.url =  res.data[0].url;
@@ -460,8 +528,10 @@
       },
       getlyric(){
         const _this = this;
+        _this.Lyric = '';
         lib.ajax.get('/lyric?id='+_this.id).then((res)=>{
-          _this.Lyric = res.lrc.lyric;
+          if(res.lrc) _this.Lyric = res.lrc.lyric;
+          else this.Lyric = []
         })
       },
       loadThumb(url){

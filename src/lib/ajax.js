@@ -6,7 +6,7 @@ import http from 'http';
 let util = {};
 let ajaxUrl ='';
 console.log(process.env.NODE_ENV)
-  ajaxUrl = 'http://10.255.255.1:3000/'
+  ajaxUrl = 'http://127.0.0.1:30123/'
   util.ajax = axios.create({
     baseURL: ajaxUrl,
     timeout: 30000,
