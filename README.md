@@ -4,7 +4,7 @@
 
 # HTML5 播放器
 
-[Window64位程序下载](master/outApp/shiwu-win32-x64.zip)
+[Window64位程序下载](outApp/shiwu-win32-x64.zip)
 
 界面模仿了网易云音乐，QQ音乐。
 
