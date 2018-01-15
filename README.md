@@ -1,7 +1,34 @@
-# {{ name }}
+# HTML5 播放器
 
-> {{ description }}
+界面模仿了网易云音乐，QQ音乐。
 
+当前正在播放的列表未做
+
+# 使用网易云 API
+
+https://github.com/Binaryify/NeteaseCloudMusicApi
+
+使用 30123 端口
+
+打包好的程序里自动启动接口 30123
+
+# 使用了一些Iview组件
+
+https://github.com/iview/iview
+
+界面布局，歌曲进度条，音量
+
+歌单详情本来用的是table组件，后来发现歌曲很多的时候table性能非常低，所以就去掉了。
+
+# 使用 Electron 打包
+
+代码质量并不高，献丑了。
+
+![](thumb/1.png)
+
+![](thumb/2.png)
+
+![](thumb/3.png)
 ## Build Setup
 
 ``` bash
@@ -14,23 +41,6 @@ npm run dev
 # build for production with minification
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
-{{#unit}}
+npm run build:win64
 
-# run unit tests
-npm run unit
-{{/unit}}
-{{#e2e}}
-
-# run e2e tests
-npm run e2e
-{{/e2e}}
-{{#if_or unit e2e}}
-
-# run all tests
-npm test
-{{/if_or}}
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+打包64位系统的程序
