@@ -15,6 +15,13 @@
       </div>
     </div>
     </div>
+    <Spin fix v-if="loading">
+      <div class="loader">
+        <svg class="circular" viewBox="25 25 50 50">
+          <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+        </svg>
+      </div>
+    </Spin>
   </div>
 </template>
 
@@ -24,6 +31,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      loading:false,
       banners:[],
       playLists:[],
       playList:[
@@ -54,9 +62,11 @@ export default {
     get(){
       // this.playList = res;
       const _this = this;
+      _this.loading = true;
       lib.ajax.get('/top/playlist').then((res)=>{
-          console.log(res)
           _this.playLists = res.playlists;
+        _this.loading = false;
+
       })
     },
     goDetail(id){

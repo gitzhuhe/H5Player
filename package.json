@@ -8,12 +8,15 @@
   "scripts": {
     "ele": "node build/build.js electron && electron ./app/index.js",
     "build:win64": "node build/build.js && electron-packager ./app shiwu --platform=win32 --arch=x64 --out ./outApp  --electronVersion=1.7.10 --overwrite",
+    "build2": "electron-packager ./app shiwu --platform=win32 --arch=x64 --out ./outApp  --electronVersion=1.7.10 --overwrite",
+    "buildA": "set ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/&& electron-packager ./app shiwu --all --out ./outApp  --electronVersion=1.8.1 --overwrite",
     "start": "electron ./app/index.js",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "build": "node build/build.js"
   },
   "dependencies": {
     "animate.css": "^3.5.2",
+    "axios": "^0.17.1",
     "big-integer": "^1.6.26",
     "fs": "^0.0.1-security",
     "iview": "^2.8.0",
@@ -38,6 +41,7 @@
     "css-loader": "^0.28.0",
     "electron": "^1.7.10",
     "electron-packager": "^10.1.1",
+    "electron-rebuild": "^1.7.3",
     "eslint": "^3.19.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
