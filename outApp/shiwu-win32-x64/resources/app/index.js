@@ -293,7 +293,7 @@ function createWindow() {
         // width: 1000,
         height: 660,
         // height: 700,
-        title: '豆瓣搜索结果解析',
+        title: '十五云音乐',
         frame:false,
         // y:200,
         // x:20,

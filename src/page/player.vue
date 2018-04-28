@@ -353,12 +353,17 @@
         // 获取 id="myVideo"的 <video> 元素
         _this.vid = document.getElementById("player");
         _this.vid.volume  = _this.volume/100;
+        _this.vid.onerror = function () {
+          setTimeout(()=>{
+            _this.autoNext();
+          },2000)
+        };
         //为 <video> 元素添加 ontimeupdate 事件，如果当前播放位置改变则执行函数
         _this.vid.ontimeupdate = function() {
           _this.load = Math.round(_this.vid.currentTime/_this.vid.duration*10000)/100;
           _this.currentTime = lib.formatSeconds(_this.vid.currentTime)
           _this.duration = lib.formatSeconds(_this.vid.duration)
-          if(_this.vid.currentTime == _this.vid.duration){
+          if(_this.vid.ended){
               _this.autoNext();
           }
           let line = 0;
@@ -502,7 +507,11 @@
           _this.getDetail();
           _this.getlyric();
           lib.ajax.get('/music/url?id='+url).then((res)=>{
-            this.url =  res.data[0].url;
+            if(res.data[0].url){
+              this.url =  res.data[0].url;
+            }else{
+              _this.autoNext();
+            }
           })
         }else{
           this.url = url;
@@ -514,10 +523,10 @@
         try{
           _this.source.cancel('cancel')
         }catch (e){
-            console.log(e)
+            // console.log(e)
         }
         _this.source = CancelToken.source();
-        console.log(_this.source);
+        // console.log(_this.source);
         lib.ajax.get('/song/detail?ids='+_this.id,{
           cancelToken:_this.source.token
         }).then((res)=>{

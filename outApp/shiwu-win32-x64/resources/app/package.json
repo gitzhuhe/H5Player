@@ -1,0 +1,25 @@
+{
+  "name": "wangyiyun",
+  "version": "1.0.0",
+  "description": "{{ description }}",
+  "author": "{{ author }}",
+  "private": true,
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "apicache": "^1.2.0",
+    "big-integer": "^1.6.26",
+    "express": "^4.16.2",
+    "request": "^2.83.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
